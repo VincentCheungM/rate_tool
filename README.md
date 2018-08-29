@@ -3,6 +3,9 @@
 
 # Requirement
 > python3
+> pandas
+> numpy
+> beautifulsoup4
 
 
 # Usage
