@@ -2,10 +2,10 @@
 > To help myself deal with the CNY-HKD calculation on trip.
 
 # Requirement
-> python3
-> pandas
-> numpy
-> beautifulsoup4
+> python3   
+> pandas    
+> numpy   
+> beautifulsoup4    
 
 
 # Usage
