@@ -143,8 +143,8 @@ def get_rate(date, source='BOC', curName='HKD',isHighEstRate=True,print_info=Tru
             print ('银联汇率接口已改变，请修改解析脚本')
             sys.exit(0)
         else:
-            timestamp = time.strftime("%Y-%m-%d %H-%M-%S",time.gmtime(ret[u'updateDate']/1000))
-            info_str = u'时间:{}, 货币名称:{}, {}:{}'.format(timestamp, 
+            timestamp = time.strftime("%Y-%m-%d %H:%M:%S",time.gmtime(ret[u'effectiveDate']/1000))
+            info_str = u'时间:{}, 货币名称:{}, {}:{:.2f}'.format(timestamp, 
                     ret[u'transactionCurrency'], u'银联国际汇率', ret[u'exchangeRate']*100)        
             
             if print_info is True:
