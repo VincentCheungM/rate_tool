@@ -21,8 +21,11 @@ if __name__ == '__main__':
     # Parse CMD line parameters
     parser = argparse.ArgumentParser('Amount calculator for HKD&CNY.')
     parser.add_argument('-f','--file',type=str,help='Input csv file, deafult:templeate.csv',default='template.csv')
-    parser.add_argument('-g','--gencsv', action="store_true",default=False)
+    parser.add_argument('-g','--gencsv', action="store_true",default=False, help='Generate template file. Default `False`.')
     parser.add_argument('-gf','--gen_csv_path',type=str, help='Generate template csv file, deafult:./templeate.csv',default='template.csv')
+    parser.add_argument('-s','--source',type=str, help='The source of rate coule be `UNP` or `BOC`, default `BOC`.',default='BOC')
+    parser.add_argument('-a','--autoswitch', action="store_true",default=False, help='Whether to switch to a highest rate or not, default `False`.')
+
     args = parser.parse_args()
     
     ## Generate template csv file and exits.
@@ -46,8 +49,20 @@ if __name__ == '__main__':
     for index, row in df.iterrows():
         date = row['日期']
         print ('Processing record on date:{}'.format(date))
-        rate, info_str = get_rate(date)
-
+        if args.autoswitch:
+            rate_boc, info_str_boc = get_rate(date, source='BOC')
+            rate_unp, info_str_unp = get_rate(date, source='UNP')
+            if rate_unp > rate_boc:
+                rate = rate_unp
+                info_str = info_str_unp
+            else:
+                rate = rate_boc
+                info_str = info_str_boc                
+        else:
+            rate, info_str = get_rate(date, source=args.source)
+        # Keep two decimals for pretty display and satisfiy the CNY units
+        rate = round(rate, 2)
+        
         # Calculate the CNY seperately.
         # Summup according to the items in K3 ERP system.
         local_fee = row['市内交通费港币']/100.0*rate + row['市内交通费人民币']
