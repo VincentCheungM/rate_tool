@@ -117,6 +117,14 @@ def get_rate(date, source='BOC', curName='HKD',isHighEstRate=True,print_info=Tru
             [webs](http://www.unionpayintl.com/cardholderServ/serviceCenter/rate).
         `info_str`: The detail info of rate for further uses. 
         """
+        # NOTE: It gets errors for Unipay, while the date are weekend.
+        # Thus should modifiy the date to Friday.
+        cur_dt_obj = datetime.datetime.strptime(date, '%Y-%m-%d')
+        weekno = cur_dt_obj.weekday()
+        if weekno == 6:
+            date = (cur_dt_obj - datetime.timedelta(2)).date()
+        elif weekno == 5:
+            date = (cur_dt_obj - datetime.timedelta(1)).date()
         ## Compose the post Requests
         url = 'http://www.unionpayintl.com/cardholderServ/serviceCenter/rate/search'
         body = {'curDate':date, 'baseCurrency':'CNY', 'transactionCurrency':curName}
